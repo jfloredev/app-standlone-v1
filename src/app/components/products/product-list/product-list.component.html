@@ -1,0 +1,22 @@
+<table class="table table-striped-columns">
+  <thead>
+    <tr>
+      <th scope="col">title</th>
+      <th scope="col">price</th>
+      <th scope="col">desription</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (product of products; track product.id) {
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.title }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.price }}</td>
+    </tr>
+    }
+  </tbody>
+  <tfoot>
+    total de registros
+  </tfoot>
+</table>

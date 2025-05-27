@@ -1,0 +1,31 @@
+<table class="table table-striped-columns">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">UserName</th>
+      <th scope="col">Email</th>
+      <th scope="col">address</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (user of users; track user.id) {
+    <tr>
+      <td scope="row">{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        <ul>
+          <li>Street :{{ user.address.street }}</li>
+          <li>Suite :{{ user.address.suite }}</li>
+          <li>city :{{ user.address.city }}</li>
+        </ul>
+      </td>
+    </tr>
+    }
+  </tbody>
+  <tfoot>
+    total de registros
+  </tfoot>
+</table>

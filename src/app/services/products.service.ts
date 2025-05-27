@@ -1,0 +1,26 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Product } from '../interfaces/products/product';
+import { Observable } from 'rxjs';
+import { enviroment } from '../constants/environmet';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductsService {
+  //1
+  //uri = 'http://api.escuelajs.co/api/v1/products';
+  uri = `${enviroment.apiBas}/products`;
+  http = inject(HttpClient);
+
+  constructor() {}
+
+  //2
+  add(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.uri, product);
+  }
+
+  getAll(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.uri);
+  }
+}
