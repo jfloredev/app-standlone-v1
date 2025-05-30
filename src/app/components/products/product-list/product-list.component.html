@@ -4,6 +4,7 @@
       <th scope="col">title</th>
       <th scope="col">price</th>
       <th scope="col">desription</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -13,6 +14,15 @@
       <td>{{ product.title }}</td>
       <td>{{ product.description }}</td>
       <td>{{ product.price }}</td>
+      <td>
+        <button
+          type="button"
+          (click)="eliminar(product)"
+          class="btn btn-warning"
+        >
+          Eliminar
+        </button>
+      </td>
     </tr>
     }
   </tbody>

@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { first } from 'rxjs';
 import { Product } from '../../../interfaces/products/product';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-add',
@@ -28,6 +29,8 @@ export class ProductAddComponent implements OnInit {
 
   //1.Formularos
   formBuilder = inject(FormBuilder);
+
+  private toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -64,13 +67,20 @@ export class ProductAddComponent implements OnInit {
       images: ['https://placeimg.com/640/480/any'],
     };
 
+    if (price > 5000)
+      this.toastr.warning('El producto' + title + 'Es my caro', 'aviso!');
+
     this.productsService.add(product).subscribe({
       next: (response) => {
         this.product = response;
+        this.toastr.success(
+          'El producto fue registrado correctamente id = ' + this.product?.id,
+          'aviso!'
+        );
         console.log('Product created successfully', this.product);
       },
       error: (err) => {
-        console.error(err);
+        this.toastr.error('error' + this.product?.id, 'error');
       },
       complete: () => {
         console.log('Complete');
@@ -84,7 +94,7 @@ export class ProductAddComponent implements OnInit {
 
   createFormProduct() {
     this.fmrProducts = this.formBuilder.group({
-      title: ['title 6'],
+      title: ['title 123123'],
       price: ['25.25'], //tiene que ser igual al nombre del campo
       description: [
         'Descripcion 2 - Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

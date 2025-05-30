@@ -23,4 +23,10 @@ export class ProductsService {
   getAll(): Observable<Product[]> {
     return this.http.get<Product[]>(this.uri);
   }
+
+  delete(id: number): Observable<boolean> {
+    const uri_local = `${this.uri}/${id}`;
+    console.log('URI:', uri_local);
+    return this.http.delete<boolean>(uri_local);
+  }
 }
