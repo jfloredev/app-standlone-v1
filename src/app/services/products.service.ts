@@ -24,6 +24,18 @@ export class ProductsService {
     return this.http.get<Product[]>(this.uri);
   }
 
+  findById(id?: number): Observable<Product> {
+    const uri_local = `${this.uri}/${id}`;
+    console.log('URI:', uri_local);
+    return this.http.get<Product>(uri_local);
+  }
+
+  update(id: number, product: Product): Observable<Product> {
+    const uri_local = `${this.uri}/${product.id}`;
+    console.log('URI:', uri_local);
+    return this.http.put<Product>(uri_local, product);
+  }
+
   delete(id: number): Observable<boolean> {
     const uri_local = `${this.uri}/${id}`;
     console.log('URI:', uri_local);

@@ -22,12 +22,13 @@
 
   <div class="form-group">
     <label for="description">Description</label>
-    <input
+    <textarea
       type="text"
       formControlName="description"
       class="form-control"
       id="description"
-    />
+    >
+    </textarea>
   </div>
 
   <div class="mb-3">
@@ -42,5 +43,8 @@
   <div class="form-group">
     <label class="form-check-label" for="exampleCheck1">Check me out</label>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="button" (click)="cancelar()" class="btn btn-succes">
+    Cancelar
+  </button>
 </form>

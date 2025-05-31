@@ -11,6 +11,7 @@ import {
 import { first } from 'rxjs';
 import { Product } from '../../../interfaces/products/product';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-add',
@@ -29,14 +30,43 @@ export class ProductAddComponent implements OnInit {
 
   //1.Formularos
   formBuilder = inject(FormBuilder);
+  router = inject(Router);
+
+  //para inyectar parametros
+  activatedRoute = inject(ActivatedRoute);
 
   private toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getAllCategories();
     this.createFormProduct();
+    this.activatedRoute.params.subscribe((p) => {
+      console.log(p);
+      if (p['id']) {
+        const id = p['id'];
+        this.findById(id);
+      }
+    });
   }
 
+  cancelar() {
+    this.router.navigate(['products/list']);
+  }
+
+  findById(id: number) {
+    this.productsService.findById(id).subscribe({
+      next: (response) => {
+        this.fmrProducts.patchValue(response);
+        this.fmrProducts.controls['categoryId'].setValue(response.category?.id);
+      },
+      error: (err) => {
+        console.error(err);
+      },
+      complete: () => {
+        console.log('Complete');
+      },
+    });
+  }
   getAllCategories() {
     this.categoryService.getAll().subscribe({
       next: (categories) => {
@@ -67,9 +97,34 @@ export class ProductAddComponent implements OnInit {
       images: ['https://placeimg.com/640/480/any'],
     };
 
-    if (price > 5000)
-      this.toastr.warning('El producto' + title + 'Es my caro', 'aviso!');
+    if (this.product?.id) {
+      product.id = this.product.id;
+      this.update(product);
+    } else {
+      this.add(product);
+    }
+  }
 
+  update(product: Product) {
+    this.productsService.update(product.id!, product).subscribe({
+      next: (response) => {
+        this.product = response;
+        this.toastr.success(
+          'El producto fue actualizado correctamente id = ' + this.product?.id,
+          'aviso!'
+        );
+        console.log('Product updated successfully', this.product);
+      },
+      error: (err) => {
+        this.toastr.error('error' + this.product?.id, 'error');
+      },
+      complete: () => {
+        console.log('Complete');
+      },
+    });
+  }
+
+  add(product: Product) {
     this.productsService.add(product).subscribe({
       next: (response) => {
         this.product = response;
@@ -86,8 +141,6 @@ export class ProductAddComponent implements OnInit {
         console.log('Complete');
       },
     });
-
-    console.log(product);
   }
 
   //METODO PARA CREAR EL FORMULARIO

@@ -1,32 +1,79 @@
-<table class="table table-striped-columns">
-  <thead>
-    <tr>
-      <th scope="col">title</th>
-      <th scope="col">price</th>
-      <th scope="col">desription</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (product of products; track product.id) {
-    <tr>
-      <td>{{ product.id }}</td>
-      <td>{{ product.title }}</td>
-      <td>{{ product.description }}</td>
-      <td>{{ product.price }}</td>
-      <td>
-        <button
-          type="button"
-          (click)="eliminar(product)"
-          class="btn btn-warning"
-        >
-          Eliminar
-        </button>
-      </td>
-    </tr>
-    }
-  </tbody>
-  <tfoot>
-    total de registros
-  </tfoot>
-</table>
+<div>
+  <div class="row" style="border-style: solid">
+    <div class="cold-md-4"></div>
+
+    <div class="cold-md-4" style="text-align: right">
+      <button
+        type="button"
+        (click)="nuevo()"
+        style="margin-left: 10px"
+        class="btn btn-success"
+      >
+        Nuevo
+      </button>
+      <button
+        type="button"
+        (click)="buscar()"
+        style="margin-left: 10px"
+        class="btn btn-primary"
+      >
+        Buscar
+      </button>
+      <button
+        type="button"
+        (click)="limpiar()"
+        style="margin-left: 10px"
+        class="btn btn-secondary"
+      >
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="cold-md-12">
+      <table class="table table-striped-columns">
+        <thead>
+          <tr>
+            <td>id</td>
+            <th scope="col">title</th>
+            <th scope="col">desription</th>
+            <th scope="col">price</th>
+            <th scope="col" colspan="2" style="text-align: center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products; track product.id) {
+          <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.title }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>
+              <button
+                type="button"
+                (click)="eliminar(product)"
+                class="btn btn-warning"
+              >
+                Eliminar
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                (click)="modificar(product)"
+                class="btn btn-secondary"
+              >
+                Editar
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+        <tfoot>
+          total de registros
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

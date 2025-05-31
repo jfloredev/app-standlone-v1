@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
 import { Product } from '../../../interfaces/products/product';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -12,6 +13,7 @@ import Swal from 'sweetalert2';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   productsService = inject(ProductsService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.getAllProducts();
@@ -41,7 +43,7 @@ export class ProductListComponent implements OnInit {
               this.products = this.products.filter((p) => p.id != product.id);
             }
           },
-          error: (err) => { 
+          error: (err) => {
             Swal.fire({
               title: 'Error!',
               text: 'There was an error deleting the product.',
@@ -56,6 +58,18 @@ export class ProductListComponent implements OnInit {
         });
       }
     });
+  }
+
+  buscar() {}
+
+  limpiar() {}
+
+  nuevo() {
+    this.router.navigate(['products/add']);
+  }
+
+  modificar(product: Product) {
+    this.router.navigate(['products/add', product.id]);
   }
 
   getAllProducts() {

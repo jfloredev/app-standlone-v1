@@ -32,6 +32,10 @@ export const routes: Routes = [
     component: UserList2Component,
   },
   {
+    path: 'products/add/:id',
+    component: ProductAddComponent,
+  },
+  {
     path: 'products/add',
     component: ProductAddComponent,
   },
