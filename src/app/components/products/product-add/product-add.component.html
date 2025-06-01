@@ -8,16 +8,53 @@
       formControlName="title"
       class="form-control"
       id="title"
+      [ngClass]="{ 'is-invalid': fp['title'].errors }"
     />
+    @if (fp['title'].errors) {
+    <div class="invalid-feedback">
+      @if (fp['title'].errors['required']) {
+      <div>El campo es requerido</div>
+      } @if (fp['title'].hasError('minlength')) {
+      <div>
+        El campo es requerido y debe tener como mínimo
+        {{ fp["title"].errors["minlength"].requiredLength }} caracteres
+      </div>
+      } @if (fp['title'].hasError('maxlength')) {
+      <div>
+        El campo es requerido y debe tener como máximo
+        {{ fp["title"].errors["maxlength"].requiredLength }} caracteres
+      </div>
+      }
+    </div>
+    }
   </div>
+
   <div class="form-group">
     <label for="price">Precio</label>
     <input
-      type="text"
+      type="number"
       formControlName="price"
       class="form-control"
       id="price"
+      [ngClass]="{ 'is-invalid': fp['price'].errors }"
     />
+    @if (fp['price'].errors) {
+    <div class="invalid-feedback">
+      @if (fp['price'].errors['required']) {
+      <div>El campo es requerido</div>
+      } @if (fp['price'].hasError('min')) {
+      <div>
+        El campo es requerido y debe tener como mínimo
+        {{ fp["price"].errors["min"].min }}
+      </div>
+      } @if (fp['price'].hasError('max')) {
+      <div>
+        El campo es requerido y debe tener como máximo
+        {{ fp["price"].errors["max"].max }}
+      </div>
+      }
+    </div>
+    }
   </div>
 
   <div class="form-group">

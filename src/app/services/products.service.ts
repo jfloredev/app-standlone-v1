@@ -24,6 +24,12 @@ export class ProductsService {
     return this.http.get<Product[]>(this.uri);
   }
 
+  findByTitle(title: string): Observable<Product[]> {
+    const uri_local = `${this.uri}?title=${title}`;
+    console.log('URI:', uri_local);
+    return this.http.get<Product[]>(uri_local);
+  }
+
   findById(id?: number): Observable<Product> {
     const uri_local = `${this.uri}/${id}`;
     console.log('URI:', uri_local);

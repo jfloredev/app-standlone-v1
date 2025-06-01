@@ -3,19 +3,22 @@ import { CategoryService } from './../../../services/category.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { Category } from '../../../interfaces/categories/category';
 import {
+  AbstractControl,
   Form,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { first } from 'rxjs';
 import { Product } from '../../../interfaces/products/product';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-product-add',
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, JsonPipe],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css',
 })
@@ -57,7 +60,8 @@ export class ProductAddComponent implements OnInit {
     this.productsService.findById(id).subscribe({
       next: (response) => {
         this.fmrProducts.patchValue(response);
-        this.fmrProducts.controls['categoryId'].setValue(response.category?.id);
+        //this.fmrProducts.controls['categoryId'].setValue(response.category?.id);
+        this.fp['categoryId'].setValue(response.category?.id);
       },
       error: (err) => {
         console.error(err);
@@ -84,7 +88,13 @@ export class ProductAddComponent implements OnInit {
   //1,- Formulario llenarlo
 
   onSubmit() {
+    if (this.fmrProducts.invalid) {
+      this.toastr.error('Formulario invalido', 'Error');
+      return;
+    }
+
     const title = this.fmrProducts.controls['title'].value;
+    // const title = this.fp['title'].value;
     const price = this.fmrProducts.controls['price'].value;
     const description = this.fmrProducts.controls['description'].value;
     const categoryId = this.fmrProducts.controls['categoryId'].value;
@@ -147,12 +157,35 @@ export class ProductAddComponent implements OnInit {
 
   createFormProduct() {
     this.fmrProducts = this.formBuilder.group({
-      title: ['title 123123'],
-      price: ['25.25'], //tiene que ser igual al nombre del campo
+      title: [
+        'title 123123',
+        {
+          validators: [
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(120),
+          ],
+        },
+      ],
+      price: [
+        //tiene que ser igual al nombre del campo
+        '25.25',
+        {
+          validators: [
+            Validators.required,
+            Validators.min(1),
+            Validators.max(1000),
+          ],
+        },
+      ],
       description: [
         'Descripcion 2 - Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       ],
       categoryId: ['1'],
     });
+  }
+
+  get fp(): { [key: string]: AbstractControl } {
+    return this.fmrProducts.controls;
   }
 }

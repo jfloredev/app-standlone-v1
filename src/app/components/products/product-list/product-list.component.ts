@@ -3,10 +3,12 @@ import { ProductsService } from '../../../services/products.service';
 import { Product } from '../../../interfaces/products/product';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-list',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
 })
@@ -15,8 +17,14 @@ export class ProductListComponent implements OnInit {
   productsService = inject(ProductsService);
   router = inject(Router);
 
+  frmProduct!: FormGroup;
+
+  formBuilder = inject(FormBuilder);
+
   ngOnInit(): void {
+    this.createFormProduct();
     this.getAllProducts();
+    // this.findByTitle('Comfort');
   }
 
   eliminar(product: Product) {
@@ -60,9 +68,14 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  buscar() {}
+  buscar() {
+    this.findByTitle();
+  }
 
-  limpiar() {}
+  limpiar() {
+    this.frmProduct.reset();
+    this.getAllProducts();
+  }
 
   nuevo() {
     this.router.navigate(['products/add']);
@@ -70,6 +83,21 @@ export class ProductListComponent implements OnInit {
 
   modificar(product: Product) {
     this.router.navigate(['products/add', product.id]);
+  }
+
+  findByTitle() {
+    const title = this.frmProduct.controls['title'].value;
+    this.productsService.findByTitle(title).subscribe({
+      next: (products) => {
+        this.products = products;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+      complete: () => {
+        console.log('Complete');
+      },
+    });
   }
 
   getAllProducts() {
@@ -83,6 +111,12 @@ export class ProductListComponent implements OnInit {
       complete: () => {
         console.log('Complete');
       },
+    });
+  }
+
+  createFormProduct() {
+    this.frmProduct = this.formBuilder.group({
+      title: ['title'],
     });
   }
 }
