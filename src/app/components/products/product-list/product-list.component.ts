@@ -1,23 +1,61 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
 import { Product } from '../../../interfaces/products/product';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Title } from '@angular/platform-browser';
+import {
+  CurrencyPipe,
+  DatePipe,
+  UpperCasePipe,
+  registerLocaleData,
+} from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { ShorTextPipe } from '../../../pipes/shor-text.pipe';
+import {
+  PageChangedEvent,
+  PaginationComponent,
+  PaginationModule,
+} from 'ngx-bootstrap/pagination';
+
+registerLocaleData(localeEs, 'es');
 
 @Component({
   selector: 'app-product-list',
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    UpperCasePipe,
+    CurrencyPipe,
+    DatePipe,
+    ShorTextPipe,
+    FormsModule,
+    PaginationModule,
+  ],
   templateUrl: './product-list.component.html',
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
   styleUrl: './product-list.component.css',
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
+
+  pagedItems: Product[] = [];
+
   productsService = inject(ProductsService);
   router = inject(Router);
 
   frmProduct!: FormGroup;
+
+  hoy: Date = new Date();
+
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
 
   formBuilder = inject(FormBuilder);
 
@@ -90,6 +128,7 @@ export class ProductListComponent implements OnInit {
     this.productsService.findByTitle(title).subscribe({
       next: (products) => {
         this.products = products;
+        this.pagedItems = this.products.slice(0, this.itemsPerPage);
       },
       error: (err) => {
         console.error(err);
@@ -104,6 +143,7 @@ export class ProductListComponent implements OnInit {
     this.productsService.getAll().subscribe({
       next: (products) => {
         this.products = products;
+        this.pagedItems = this.products.slice(0, this.itemsPerPage);
       },
       error: (err) => {
         console.error(err);
@@ -118,5 +158,11 @@ export class ProductListComponent implements OnInit {
     this.frmProduct = this.formBuilder.group({
       title: ['title'],
     });
+  }
+
+  pageChanged(event: PageChangedEvent): void {
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = startItem + event.itemsPerPage;
+    this.pagedItems = this.products.slice(startItem, endItem);
   }
 }

@@ -1,6 +1,8 @@
+<p>{{ hoy | date : "d 'de' MMMM 'de' y, h:mm a" }}</p>
+
 <div class="container">
   <div class="row">
-    <form [formGroup]="frmProduct" >
+    <form [formGroup]="frmProduct">
       <div class="col-md-12">
         <div class="row align-items-end">
           <div class="col-md-6">
@@ -50,12 +52,12 @@
             </tr>
           </thead>
           <tbody>
-            @for (product of products; track product.id) {
+            @for (product of pagedItems; track product.id) {
             <tr>
               <td>{{ product.id }}</td>
-              <td>{{ product.title }}</td>
-              <td>{{ product.description }}</td>
-              <td>{{ product.price }}</td>
+              <td>{{ product.title | uppercase }}</td>
+              <td>{{ product.description | shorText }}</td>
+              <td>{{ product.price | currency : "USD" }}</td>
               <td>
                 <button
                   type="button"
@@ -78,6 +80,22 @@
             }
           </tbody>
         </table>
+
+        <div class="row">
+          <div class="col-12">
+            <pagination
+              [totalItems]="products.length"
+              [(ngModel)]="currentPage"
+              (pageChanged)="pageChanged($event)"
+              [itemsPerPage]="5"
+              previousText="&lsaquo;"
+              nextText="&rsaquo;"
+              firstText="&laquo;"
+              lastText="&raquo;"
+            >
+            </pagination>
+          </div>
+        </div>
       </div>
     </div>
   </div>

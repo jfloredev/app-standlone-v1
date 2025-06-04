@@ -10,7 +10,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { first } from 'rxjs';
 import { Product } from '../../../interfaces/products/product';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +17,7 @@ import { CommonModule, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-product-add',
-  imports: [CommonModule, ReactiveFormsModule, JsonPipe],
+  imports: [CommonModule, ReactiveFormsModule /*JsonPipe*/],
   templateUrl: './product-add.component.html',
   styleUrl: './product-add.component.css',
 })
