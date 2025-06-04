@@ -61,6 +61,15 @@
               <td>
                 <button
                   type="button"
+                  (click)="visualizar(product, templateVisualizarProduct)"
+                  class="btn btn-info"
+                >
+                  Visualizar
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
                   (click)="eliminar(product)"
                   class="btn btn-danger btn-sm"
                 >
@@ -78,6 +87,12 @@
               </td>
             </tr>
             }
+          </tbody>
+          <tbody>
+            total de productos:
+            {{
+              products.length
+            }}
           </tbody>
         </table>
 
@@ -100,3 +115,49 @@
     </div>
   </div>
 </div>
+
+<ng-template #templateVisualizarProduct>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <tr></tr>
+    <tr>
+      <td scope="col">ID:</td>
+      <td>{{ productSelect?.id }}</td>
+    </tr>
+
+    <tr>
+      <td scope="col">title:</td>
+      <td>{{ productSelect?.title | uppercase }}</td>
+    </tr>
+
+    <tr>
+      <td scope="col">Description:</td>
+      <td>{{ productSelect!.description | shorText }}</td>
+    </tr>
+
+    <tr>
+      <td scope="col">Price:</td>
+      <td>{{ productSelect?.price | currency : "USD" }}</td>
+    </tr>
+
+    <tr>
+      <td scope="col">Categoria:</td>
+      <td>{{ productSelect?.category?.name }}</td>
+    </tr>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary">Save changes</button>
+  </div>
+</ng-template>

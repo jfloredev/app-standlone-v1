@@ -1,4 +1,10 @@
-import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  LOCALE_ID,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
 import { ProductsService } from '../../../services/products.service';
 import { Product } from '../../../interfaces/products/product';
 import Swal from 'sweetalert2';
@@ -14,6 +20,7 @@ import { Title } from '@angular/platform-browser';
 import {
   CurrencyPipe,
   DatePipe,
+  JsonPipe,
   UpperCasePipe,
   registerLocaleData,
 } from '@angular/common';
@@ -24,6 +31,7 @@ import {
   PaginationComponent,
   PaginationModule,
 } from 'ngx-bootstrap/pagination';
+import { BsModalRef, BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 
 registerLocaleData(localeEs, 'es');
 
@@ -37,18 +45,23 @@ registerLocaleData(localeEs, 'es');
     ShorTextPipe,
     FormsModule,
     PaginationModule,
+    ModalModule,
+    JsonPipe,
   ],
   templateUrl: './product-list.component.html',
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }, BsModalService],
   styleUrl: './product-list.component.css',
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
 
+  productSelect?: Product;
   pagedItems: Product[] = [];
 
   productsService = inject(ProductsService);
   router = inject(Router);
+  modalService = inject(BsModalService);
+  modalRef?: BsModalRef;
 
   frmProduct!: FormGroup;
 
@@ -110,6 +123,11 @@ export class ProductListComponent implements OnInit {
     this.findByTitle();
   }
 
+  visualizar(product: Product, templateVisualizarProduct: TemplateRef<void>) {
+    this.productSelect = product;
+    this.openModal(templateVisualizarProduct);
+  }
+
   limpiar() {
     this.frmProduct.reset();
     this.getAllProducts();
@@ -121,6 +139,10 @@ export class ProductListComponent implements OnInit {
 
   modificar(product: Product) {
     this.router.navigate(['products/add', product.id]);
+  }
+
+  openModal(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template);
   }
 
   findByTitle() {
