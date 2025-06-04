@@ -46,7 +46,6 @@ registerLocaleData(localeEs, 'es');
     FormsModule,
     PaginationModule,
     ModalModule,
-    JsonPipe,
   ],
   templateUrl: './product-list.component.html',
   providers: [{ provide: LOCALE_ID, useValue: 'es' }, BsModalService],
